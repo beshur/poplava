@@ -4,19 +4,25 @@
 <head>
   <title>Право на поплаву</title>
   <link rel="stylesheet" href="style.css">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
 
 <body>
   <main>
     <h1>Право на поплаву</h1>
-    <input type="text" id="search" placeholder="Пошук" />
+    <div class="searchWrap">
+      <input type="text" id="search" placeholder="Пошук" />
+      <div id="searchResults"></div>
+    </div>
+    <section id="watch"></section>
     <section id="videos"></section>
+    <div id="overlay"></div>
   </main>
-  <script src="https://unpkg.com/lunr/lunr.js"></script>
   <script src="https://www.youtube.com/iframe_api"></script>
+  <script src="https://cdn.jsdelivr.net/gh/nextapps-de/flexsearch@0.7.2/dist/flexsearch.light.js"></script>
   <script src="./data.js"></script>
   <script src="./videos.js"></script>
-
 </body>
 
 </html>

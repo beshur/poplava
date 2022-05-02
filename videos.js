@@ -1,7 +1,21 @@
-const players = {};
-let idx;
-const VIDEO_HEIGHT = 315;
-const VIDEO_WIDTH = 560;
+const player = { current: null };
+const index = new FlexSearch.Index({ language: 'uk' });
+
+const VIDEO_HEIGHT = 250;
+const VIDEO_WIDTH = '100%';
+
+let overlayVisible = false;
+
+const getSecondsFromTimestamp = function (timestamp) {
+  return timestamp
+    .split(':')
+    .map(function (item, index) {
+      return parseInt(item, 10) * (!index ? 60 : 1);
+    })
+    .reduce(function (sum, item) {
+      return (sum = sum + (isNaN(item) ? 0 : item));
+    }, 0);
+};
 
 const TIMESTAMPS_LIST = function (timestamps) {
   const result = [];
@@ -17,12 +31,14 @@ const ITEM_TPL = function ({ id, title, timestamps }) {
   return `<article id="${id}" class="item">
     <h3>${title}</h3>
     <div class="content">
-    <ul class="timestamps">${TIMESTAMPS_LIST(timestamps)}</ul>
-
-    <div id="playerId${id}"></div>
+      <div id="playerId${id}"></div>
+      <ul class="timestamps">${TIMESTAMPS_LIST(timestamps)}</ul>
     </div>
-    <span class="expand">Розгорнути</span>
   </article>`;
+};
+
+const TITLE_TPL = function ({ id, title }) {
+  return `<article data-id="${id}" data-timestamp="" class="itemTitle">${title}</article>`;
 };
 
 const timeStampHandler = function (e) {
@@ -30,75 +46,144 @@ const timeStampHandler = function (e) {
   if (!target) {
     return;
   }
-  const article = target.closest('article');
-  const id = article.id;
-  const player = players[id];
-  const seconds = target.dataset.timestamp
-    .split(':')
-    .map(function (item, index) {
-      return parseInt(item, 10) * (!index ? 60 : 1);
+  const seconds = getSecondsFromTimestamp(target.dataset.timestamp);
+  player.current.seekTo(seconds);
+  player.current.playVideo();
+};
+
+const resolveSearch = function (searchId) {
+  const [id, timestamp] = searchId.split('@');
+  const item = DATA[id];
+  const result = { id, timestamp, num: item.num, title: item.title };
+  if (timestamp) {
+    result.title = item.timestamps[timestamp];
+  }
+  return result;
+};
+
+const SEARCH_RESULTS_TPL = function (results) {
+  if (!results.length) {
+    return '<div>Нічого не знайдено</div>';
+  }
+  const resolvedResults = results.map(resolveSearch);
+  return `<ul>${resolvedResults
+    .map(function (item) {
+      return `<li class="searchResult" data-id="${
+        item.id
+      }" data-timestamp="${item.timestamp}">(${item.num}${item.timestamp ? '@' + item.timestamp : ''}) ${item.title}</li>`;
     })
-    .reduce(function (sum, item) {
-      return (sum = sum + item);
-    }, 0);
-  player.seekTo(seconds);
-  player.playVideo();
+    .join('')}</ul>`;
 };
 
-const expandHandler = function (e) {
-  const target = e.target;
-  const article = target.closest('article');
+function searchSelectHandler(e) {
+  // ITEM_TPL
+  const fields = e.target.dataset;
+  const item = DATA[fields.id];
 
-  const collapsed = article.className === 'item';
-  article.className = collapsed ? 'item expanded' : 'item';
-  target.innerHTML = collapsed ? 'Згорнути' : 'Розгорнути';
-};
+  const currentId = player.current ? player.current.getVideoData().video_id : '';
+  if (currentId !== fields.id) {
+    document.getElementById('watch').innerHTML = ITEM_TPL(item);
+    initVideo(fields.id, fields.timestamp);
+    window.scrollTo(0, 0);
+  } else {
+    const seconds = getSecondsFromTimestamp(fields.timestamp);
+    player.current.seekTo(seconds);
+    player.current.playVideo();
+  }
+  toggleSearchOverlay(false);
+}
 
-function initVideos() {
-  idx = lunr(function () {
-    this.ref('id');
-    this.field('timestamps');
-    this.field('title');
+function initSearch() {
+  for (let id in DATA) {
+    const item = DATA[id];
+    // search index
+    index.add(item.id, item.title);
+    for (let timestamp in item.timestamps) {
+      index.add(item.id + '@' + timestamp, item.timestamps[timestamp]);
+    }
+  }
+}
 
-    DATA.forEach(function (item) {
-      this.add(item);
-
-      players[item.id] = new YT.Player('playerId' + item.id, {
-        height: VIDEO_HEIGHT,
-        width: VIDEO_WIDTH,
-        videoId: item.id,
-      });
-    }, this);
+const initVideo = function (id, start = '') {
+  player.current = new YT.Player('playerId' + id, {
+    height: VIDEO_HEIGHT,
+    width: VIDEO_WIDTH,
+    videoId: id,
+    events: {
+      onReady: function () {
+        if (start) {
+          const seconds = getSecondsFromTimestamp(start);
+          player.current.seekTo(seconds);
+          player.current.playVideo();
+        }
+      },
+    },
   });
+};
+
+function toggleSearchOverlay(on) {
+  const searchResultsEl = document.getElementById('searchResults');
+  if (!overlayVisible && on) {
+    overlayVisible = true;
+    searchResultsEl.parentElement.classList.toggle('show');
+    document.body.classList.toggle('showOverlay');
+  } else if (overlayVisible && !on) {
+    overlayVisible = false;
+    searchResultsEl.parentElement.classList.toggle('show');
+    document.body.classList.toggle('showOverlay');
+  }
 }
 
 function onSearch(e) {
   const s = e.target.value.toLowerCase();
+  const results = index.search(s, 10);
 
-  console.log('search', idx.search(s));
+  const searchResultsEl = document.getElementById('searchResults');
+  searchResultsEl.innerHTML = SEARCH_RESULTS_TPL(results);
+  toggleSearchOverlay(true);
 }
 
 function onYouTubeIframeAPIReady() {
   console.log('start');
-
+  let index = 0;
+  const watchEl = document.getElementById('watch');
   const videosEl = document.getElementById('videos');
   const searchEl = document.getElementById('search');
+  const searchResultsEl = document.getElementById('searchResults');
 
-  const videosHtml = DATA.map(ITEM_TPL);
+  const videosHtml = [];
+  for (let id in DATA) {
+    if (!index) {
+      watchEl.innerHTML = ITEM_TPL(DATA[id]);
+      initVideo(id);
+      videosHtml.push(TITLE_TPL(DATA[id]));
+    } else {
+      videosHtml.push(TITLE_TPL(DATA[id]));
+    }
+    index++;
+  }
 
   videosEl.innerHTML = videosHtml.join('');
 
-  initVideos();
+  initSearch();
 
   searchEl.addEventListener('keyup', onSearch);
 
-  videosEl.addEventListener('click', function (e) {
+  watchEl.addEventListener('click', function (e) {
     if (e.target) {
       if (e.target.className === 'timestamp') {
         timeStampHandler(e);
-      } else if (e.target.className === 'expand') {
-        expandHandler(e);
       }
     }
+  });
+  searchResultsEl.addEventListener('click', function (e) {
+    if (e.target) {
+      if (e.target.className === 'searchResult') {
+        searchSelectHandler(e);
+      }
+    }
+  });
+  videosEl.addEventListener('click', function (e) {
+    searchSelectHandler(e);
   });
 }

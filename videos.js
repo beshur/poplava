@@ -1,5 +1,5 @@
 const player = { current: null };
-const index = new FlexSearch.Index({ language: 'uk' });
+const index = new FlexSearch.Index({ tokenize: 'full', language: 'uk' });
 
 const VIDEO_HEIGHT = 400;
 const VIDEO_WIDTH = '100%';
@@ -73,9 +73,10 @@ const SEARCH_RESULTS_TPL = function (results) {
   const resolvedResults = results.map(resolveSearch);
   return `<ul>${resolvedResults
     .map(function (item) {
-      return `<li class="searchResult" data-id="${
-        item.id
-      }" data-timestamp="${item.timestamp}">(${item.num}${item.timestamp ? '@' + item.timestamp : ''}) ${item.title}</li>`;
+      return `<li class="searchResult" data-id="${item.id}" data-timestamp="${item.timestamp}">
+        <span class="timestamp">${item.num}${item.timestamp ? '@' + item.timestamp : ''}</span>
+        ${item.title}
+      </li>`;
     })
     .join('')}</ul>`;
 };

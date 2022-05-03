@@ -32,8 +32,9 @@ const ITEM_TPL = function ({ id, title, timestamps }) {
     <h3>${title}</h3>
     <div class="content">
       <div id="playerId${id}"></div>
-      <ul class="timestamps">${TIMESTAMPS_LIST(timestamps)}</ul>
+      <span class="lds-dual-ring"></span>
     </div>
+    <ul class="timestamps">${TIMESTAMPS_LIST(timestamps)}</ul>
   </article>`;
 };
 
@@ -75,17 +76,38 @@ const SEARCH_RESULTS_TPL = function (results) {
     .join('')}</ul>`;
 };
 
-function searchSelectHandler(e) {
-  const fields = e.target.dataset;
-  const item = DATA[fields.id];
+const initVideo = function (videoId, start = '') {
+  player.current = new YT.Player('playerId' + videoId, {
+    height: VIDEO_HEIGHT,
+    width: VIDEO_WIDTH,
+    videoId,
+    events: {
+      onReady: function () {
+        if (start) {
+          const seconds = getSecondsFromTimestamp(start);
+          player.current.seekTo(seconds);
+          player.current.playVideo();
+        }
+      },
+    },
+  });
+};
 
-  const currentId = player.current ? player.current.getVideoData().video_id : '';
-  if (currentId !== fields.id) {
+function searchSelectHandler(e) {
+  const { id, timestamp } = e.target.dataset;
+  changeVideo({ id, timestamp });
+}
+
+function changeVideo({ id, timestamp }) {
+  const item = DATA[id];
+
+  const currentId = player.current !== null ? player.current.getVideoData().video_id : '';
+  if (currentId !== id) {
     document.getElementById('watch').innerHTML = ITEM_TPL(item);
-    initVideo(fields.id, fields.timestamp);
+    initVideo(id, timestamp);
     window.scrollTo(0, 0);
   } else {
-    const seconds = getSecondsFromTimestamp(fields.timestamp);
+    const seconds = getSecondsFromTimestamp(timestamp);
     player.current.seekTo(seconds);
     player.current.playVideo();
   }
@@ -102,23 +124,6 @@ function initSearch() {
     }
   }
 }
-
-const initVideo = function (id, start = '') {
-  player.current = new YT.Player('playerId' + id, {
-    height: VIDEO_HEIGHT,
-    width: VIDEO_WIDTH,
-    videoId: id,
-    events: {
-      onReady: function () {
-        if (start) {
-          const seconds = getSecondsFromTimestamp(start);
-          player.current.seekTo(seconds);
-          player.current.playVideo();
-        }
-      },
-    },
-  });
-};
 
 function toggleSearchOverlay(on) {
   const searchResultsEl = document.getElementById('searchResults');
@@ -148,17 +153,15 @@ function onYouTubeIframeAPIReady() {
   const watchEl = document.getElementById('watch');
   const videosEl = document.getElementById('videos');
   const searchEl = document.getElementById('search');
+  const overlayEl = document.getElementById('overlay');
   const searchResultsEl = document.getElementById('searchResults');
 
   const videosHtml = [];
   for (let id in DATA) {
     if (!index) {
-      watchEl.innerHTML = ITEM_TPL(DATA[id]);
-      initVideo(id);
-      videosHtml.push(TITLE_TPL(DATA[id]));
-    } else {
-      videosHtml.push(TITLE_TPL(DATA[id]));
+      changeVideo({ id });
     }
+    videosHtml.push(TITLE_TPL(DATA[id]));
     index++;
   }
 
@@ -184,5 +187,9 @@ function onYouTubeIframeAPIReady() {
   });
   videosEl.addEventListener('click', function (e) {
     searchSelectHandler(e);
+  });
+
+  overlayEl.addEventListener('click', function (e) {
+    toggleSearchOverlay(false);
   });
 }

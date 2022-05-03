@@ -1,7 +1,7 @@
 const player = { current: null };
 const index = new FlexSearch.Index({ language: 'uk' });
 
-const VIDEO_HEIGHT = 250;
+const VIDEO_HEIGHT = 400;
 const VIDEO_WIDTH = '100%';
 
 let overlayVisible = false;
@@ -76,7 +76,6 @@ const SEARCH_RESULTS_TPL = function (results) {
 };
 
 function searchSelectHandler(e) {
-  // ITEM_TPL
   const fields = e.target.dataset;
   const item = DATA[fields.id];
 

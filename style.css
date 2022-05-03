@@ -1,6 +1,9 @@
 * {
   font-family: Arial, Helvetica, sans-serif;
 }
+a {
+  color: rgb(62 131 222);
+}
 
 body {
   background-color: #272727;
@@ -31,26 +34,6 @@ main {
   border-bottom-color: transparent;
 }
 
-/*
-.item .expand {
-  position: absolute;
-  bottom: 0;
-  display: block;
-  width: 100%;
-  text-align: center;
-  padding: 10px 20px;
-  cursor: pointer;
-  background-color: rgba(146, 146, 146, .5);
-}
-
-.item .expand:hover {
-  background-color: rgba(146, 146, 146, .7);
-}
-
-.item.expanded {
-  height: auto;
-}
-*/
 .timestamps  {
   padding-left: 0;
   padding-bottom: 40px;
@@ -137,4 +120,15 @@ body.showOverlay {
 
 body.showOverlay #overlay {
   display: block;
+}
+
+footer {
+  display: block;
+  padding: 20px 0;
+  text-align: center;
+}
+footer nav ul li {
+  display: inline-block;
+  margin-right: 20px;
+  list-style-type: none;
 }

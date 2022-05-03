@@ -5,9 +5,24 @@ a {
   color: rgb(62 131 222);
 }
 
+html {
+  background-color: #111;
+}
 body {
-  background-color: #272727;
+  padding: 0;
+  margin: 0;
   color: #929292;
+  background: linear-gradient(to bottom, #111, #222);
+}
+
+header {
+  display: flex;
+  flex-direction: row;
+  flex-grow: 1;
+  justify-content: space-between;
+  align-items: baseline;
+  max-width: 1000px;
+  margin: 0 auto;
 }
 
 main {
@@ -25,6 +40,12 @@ main {
   display: flex;
   flex-direction: column;
 }
+#watch {
+  min-height: 100vh;
+}
+.item .content > div {
+  height: 400px;
+}
 .item .content iframe {
   position: relative;
   z-index: 1;
@@ -37,12 +58,19 @@ main {
 }
 
 .itemTitle {
-  padding: 10px 0;
+  padding: 10px 20px;
   border-bottom: 1px solid #666;
   cursor: pointer;
 }
 .itemTitle:last-of-type {
   border-bottom-color: transparent;
+}
+.itemTitle:hover {
+  background-color: rgba(10,10,10,.4);
+}
+
+.itemTitle.active {
+  background-color: rgba(10,10,10,.8);
 }
 
 .timestamps  {
@@ -71,16 +99,17 @@ main {
 .searchWrap {
   position: relative;
   z-index: 3;
-  margin-bottom: 50px;
+  top: -8px;
 }
 #searchResults {
   position: absolute;
   z-index: 1;
   top: 40px;
-  left: 0;
-  width: 100%;
+  right: 0;
   display: none;
   color: #bebebe;
+  width: 650px;
+  max-width: 100vw;
 }
 .searchWrap.show #searchResults {
   display: block;
@@ -137,6 +166,8 @@ footer {
   display: block;
   padding: 20px 0;
   text-align: center;
+  max-width: 1000px;
+  margin: 0 auto;
 }
 footer nav ul li {
   display: inline-block;

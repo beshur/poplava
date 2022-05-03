@@ -5,8 +5,12 @@ const VIDEO_HEIGHT = 400;
 const VIDEO_WIDTH = '100%';
 
 let overlayVisible = false;
+let currentId = '';
 
 const getSecondsFromTimestamp = function (timestamp) {
+  if (!timestamp) {
+    return 0;
+  }
   return timestamp
     .split(':')
     .map(function (item, index) {
@@ -101,8 +105,8 @@ function searchSelectHandler(e) {
 function changeVideo({ id, timestamp }) {
   const item = DATA[id];
 
-  const currentId = player.current !== null ? player.current.getVideoData().video_id : '';
   if (currentId !== id) {
+    currentId = id;
     document.getElementById('watch').innerHTML = ITEM_TPL(item);
     initVideo(id, timestamp);
     window.scrollTo(0, 0);
@@ -112,6 +116,8 @@ function changeVideo({ id, timestamp }) {
     player.current.playVideo();
   }
   toggleSearchOverlay(false);
+  document.querySelectorAll(`#videos article`).forEach((item) => item.classList.remove('active'));
+  document.querySelector(`#videos [data-id="${id}"]`)?.classList.toggle('active');
 }
 
 function initSearch() {
@@ -147,8 +153,9 @@ function onSearch(e) {
   toggleSearchOverlay(true);
 }
 
-function onYouTubeIframeAPIReady() {
-  console.log('start');
+window.onload = function () {
+  console.log('loaded');
+
   let index = 0;
   const watchEl = document.getElementById('watch');
   const videosEl = document.getElementById('videos');
@@ -158,11 +165,7 @@ function onYouTubeIframeAPIReady() {
 
   const videosHtml = [];
   for (let id in DATA) {
-    if (!index) {
-      changeVideo({ id });
-    }
     videosHtml.push(TITLE_TPL(DATA[id]));
-    index++;
   }
 
   videosEl.innerHTML = videosHtml.join('');
@@ -192,4 +195,18 @@ function onYouTubeIframeAPIReady() {
   overlayEl.addEventListener('click', function (e) {
     toggleSearchOverlay(false);
   });
+
+  // This code loads the IFrame Player API code asynchronously.
+  const tag = document.createElement('script');
+  tag.src = 'https://www.youtube.com/iframe_api';
+  const firstScriptTag = document.getElementsByTagName('script')[0];
+  firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+};
+
+function onYouTubeIframeAPIReady() {
+  console.log('YT API loaded');
+  for (let id in DATA) {
+    changeVideo({ id });
+    break;
+  }
 }

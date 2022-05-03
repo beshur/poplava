@@ -49,7 +49,7 @@ main {
   flex-direction: column;
 }
 #watch {
-  min-height: 100vh;
+  min-height: 400px;
 }
 .item .content > div {
   height: 400px;

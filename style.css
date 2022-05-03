@@ -191,6 +191,7 @@ footer nav ul {
 footer nav ul li {
   display: inline-block;
   margin-right: 20px;
+  margin-bottom: 10px;
   list-style-type: none;
 }
 

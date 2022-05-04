@@ -142,6 +142,7 @@ main {
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
+  user-select: none;
 }
 #searchResults ul li .timestamp {
   color: rgb(62 131 222);

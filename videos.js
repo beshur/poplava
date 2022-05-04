@@ -13,7 +13,11 @@ const getSecondsFromTimestamp = function (timestamp) {
   }
   return timestamp
     .split(':')
-    .map(function (item, index) {
+    .map(function (item, index, array) {
+      if (array.length === 3) {
+        // hours
+        return parseInt(item, 10) * (!index ? 3600 : index === 1 ? 60 : 1);
+      }
       return parseInt(item, 10) * (!index ? 60 : 1);
     })
     .reduce(function (sum, item) {

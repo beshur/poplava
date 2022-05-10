@@ -158,6 +158,18 @@ function onSearch(e) {
   toggleSearchOverlay(true);
 }
 
+function onRusClick() {
+  let el = document.getElementById('rusAudio');
+  const num = Math.floor(Math.random() * 3);
+  if (!el) {
+    el = document.createElement('audio');
+    el.id = 'rusAudio';
+    document.body.appendChild(el);
+  }
+  el.src = `./rus${num}.m4a`;
+  el.play();
+}
+
 window.onload = function () {
   console.log('loaded');
 
@@ -167,6 +179,7 @@ window.onload = function () {
   const searchEl = document.getElementById('search');
   const overlayEl = document.getElementById('overlay');
   const searchResultsEl = document.getElementById('searchResults');
+  const rusEl = document.querySelector('.rus');
 
   const videosHtml = [];
   for (let id in DATA) {
@@ -200,6 +213,8 @@ window.onload = function () {
   overlayEl.addEventListener('click', function (e) {
     toggleSearchOverlay(false);
   });
+
+  rusEl.addEventListener('click', onRusClick);
 
   // This code loads the IFrame Player API code asynchronously.
   const tag = document.createElement('script');

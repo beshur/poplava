@@ -1,7 +1,7 @@
 const DATA = {
   DKKDT5AjwQA: {
     id: 'DKKDT5AjwQA',
-    title: '#49 Фронтова поплава',
+    title: '#49 Фронтова поплава: бронетехніка',
     date: '2022-05-11',
     num: 49,
     timestamps: {

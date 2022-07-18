@@ -108,8 +108,8 @@ const initVideo = function (videoId, start = '') {
   });
 };
 
-function searchSelectHandler(e) {
-  const { id, timestamp } = e.target.dataset;
+function searchSelectHandler(dataset) {
+  const { id, timestamp } = dataset;
   changeVideo({ id, timestamp });
 }
 
@@ -211,18 +211,19 @@ window.onload = function () {
     }
   });
   searchResultsEl.addEventListener('click', function (e) {
-    if (e.target) {
-      if (e.target.className === 'searchResult') {
-        const { id, timestamp } = e.target.dataset;
-        analyticsPush('Search', 'Selected Result', [id, timestamp].join('@'));
-        searchSelectHandler(e);
-      }
+    let pointer = e;
+    if (e.target.className !== 'searchResult') {
+      pointer = { target: e.target.parentElement };
     }
+
+    const { id, timestamp } = pointer.target.dataset;
+    analyticsPush('Search', 'Selected Result', [id, timestamp].join('@'));
+    searchSelectHandler(pointer.target.dataset);
   });
   videosEl.addEventListener('click', function (e) {
     const { id } = e.target.dataset;
     analyticsPush('Videos', 'Selected Video', id);
-    searchSelectHandler(e);
+    searchSelectHandler(e.target.dataset);
   });
 
   overlayEl.addEventListener('click', function (e) {

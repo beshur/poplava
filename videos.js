@@ -7,6 +7,12 @@ const VIDEO_WIDTH = '100%';
 let overlayVisible = false;
 let currentId = '';
 
+const analyticsPush = function (category, action, name) {
+  if (_paq) {
+    _paq.push(['trackEvent', category, action, name]);
+  }
+};
+
 const getSecondsFromTimestamp = function (timestamp) {
   if (!timestamp) {
     return 0;
@@ -119,6 +125,8 @@ function changeVideo({ id, timestamp }) {
     const seconds = getSecondsFromTimestamp(timestamp);
     player.current.seekTo(seconds);
     player.current.playVideo();
+
+    analyticsPush('Videos', 'Selected Timestamp', [id, timestamp].join('@'));
   }
   toggleSearchOverlay(false);
   document.querySelectorAll(`#videos article`).forEach((item) => item.classList.remove('active'));
@@ -155,11 +163,13 @@ function onSearch(e) {
 
   const searchResultsEl = document.getElementById('searchResults');
   searchResultsEl.innerHTML = SEARCH_RESULTS_TPL(results);
+  analyticsPush('Search', 'Keyup', 'keyup');
   toggleSearchOverlay(true);
 }
 
 function onRusClick() {
   let el = document.getElementById('rusAudio');
+
   const num = Math.floor(Math.random() * 3);
   if (!el) {
     el = document.createElement('audio');
@@ -168,6 +178,7 @@ function onRusClick() {
   }
   el.src = `./rus${num}.m4a`;
   el.play();
+  analyticsPush('Easter', 'Clicked', 'click' + num);
 }
 
 window.onload = function () {
@@ -202,11 +213,15 @@ window.onload = function () {
   searchResultsEl.addEventListener('click', function (e) {
     if (e.target) {
       if (e.target.className === 'searchResult') {
+        const { id, timestamp } = e.target.dataset;
+        analyticsPush('Search', 'Selected Result', [id, timestamp].join('@'));
         searchSelectHandler(e);
       }
     }
   });
   videosEl.addEventListener('click', function (e) {
+    const { id } = e.target.dataset;
+    analyticsPush('Videos', 'Selected Video', id);
     searchSelectHandler(e);
   });
 

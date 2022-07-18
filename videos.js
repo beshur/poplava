@@ -61,9 +61,10 @@ const timeStampHandler = function (e) {
   if (!target) {
     return;
   }
-  const seconds = getSecondsFromTimestamp(target.dataset.timestamp);
-  player.current.seekTo(seconds);
-  player.current.playVideo();
+  changeVideo({
+    id: currentId,
+    timestamp: target.dataset.timestamp,
+  });
 };
 
 const resolveSearch = function (searchId) {
@@ -121,11 +122,11 @@ function changeVideo({ id, timestamp }) {
     document.getElementById('watch').innerHTML = ITEM_TPL(item);
     initVideo(id, timestamp);
     window.scrollTo(0, 0);
+    analyticsPush('Videos', 'Selected Video', [id, timestamp].join('@'));
   } else {
     const seconds = getSecondsFromTimestamp(timestamp);
     player.current.seekTo(seconds);
     player.current.playVideo();
-
     analyticsPush('Videos', 'Selected Timestamp', [id, timestamp].join('@'));
   }
   toggleSearchOverlay(false);

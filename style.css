@@ -13,7 +13,7 @@ body {
   padding: 0;
   margin: 0;
   color: #b1b1b1;
-  background: linear-gradient(to bottom, #111, #222);
+  background: #151515 url("./images/bulochka.jpg") 0 100% no-repeat;
 }
 
 ul {

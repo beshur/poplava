@@ -62,6 +62,10 @@ header div:first-child {
   .searchWrap #search {
     width: 100%;
   }
+
+  body {
+    padding-bottom: 150px;
+  }
 }
 
 main {

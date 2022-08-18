@@ -1,4 +1,11 @@
 const DATA = {
+  '6WScvXjd8tE': {
+    id: '6WScvXjd8tE',
+    title: '#79 Фронтова поплава: Олег Карпенко: Фандрейзинг для «Повернись живим»',
+    date: '2022-08-17',
+    num: 79,
+    timestamps: {},
+  },
   sxvu1cy9nLA: {
     id: 'sxvu1cy9nLA',
     title: '#78 Фронтова поплава',

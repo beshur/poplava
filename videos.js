@@ -6,11 +6,21 @@ const VIDEO_WIDTH = '100%';
 
 let overlayVisible = false;
 let currentId = '';
+let debounceTimer;
 
 const analyticsPush = function (category, action, name) {
   if (_paq) {
     _paq.push(['trackEvent', category, action, name]);
   }
+};
+
+const debounce = (callback, time) => {
+  window.clearTimeout(debounceTimer);
+  debounceTimer = window.setTimeout(callback, time);
+};
+
+const debouncedSearchKeyup = function () {
+  return debounce(analyticsPush.bind(null, 'Search', 'Keyup', 'keyup'), 250);
 };
 
 const getSecondsFromTimestamp = function (timestamp) {
@@ -164,7 +174,7 @@ function onSearch(e) {
 
   const searchResultsEl = document.getElementById('searchResults');
   searchResultsEl.innerHTML = SEARCH_RESULTS_TPL(results);
-  analyticsPush('Search', 'Keyup', 'keyup');
+  debouncedSearchKeyup();
   toggleSearchOverlay(true);
 }
 

@@ -51,8 +51,8 @@ const TIMESTAMPS_LIST = function (timestamps) {
   return result.join('');
 };
 
-const ITEM_TPL = function ({ id, title, timestamps }) {
-  return `<article id="${id}" class="item">
+const ITEM_TPL = function ({ id, title, timestamps, deleted }) {
+  return `<article id="${id}" class="item${deleted ? ' item-deleted' : ''}">
     <h3>${title}</h3>
     <div class="content">
       <div id="playerId${id}"></div>
@@ -62,8 +62,10 @@ const ITEM_TPL = function ({ id, title, timestamps }) {
   </article>`;
 };
 
-const TITLE_TPL = function ({ id, title }) {
-  return `<article data-id="${id}" data-timestamp="" class="itemTitle">${title}</article>`;
+const TITLE_TPL = function ({ id, title, deleted }) {
+  return `<article data-id="${id}" data-timestamp="" class="itemTitle${deleted ? ' itemTitle-deleted' : ''}">${title}${
+    deleted ? ' (видалено)' : ''
+  }</article>`;
 };
 
 const timeStampHandler = function (e) {
@@ -148,9 +150,11 @@ function initSearch() {
   for (let id in DATA) {
     const item = DATA[id];
     // search index
-    index.add(item.id, item.title);
-    for (let timestamp in item.timestamps) {
-      index.add(item.id + '@' + timestamp, item.timestamps[timestamp]);
+    if (!item.deleted) {
+      index.add(item.id, item.title);
+      for (let timestamp in item.timestamps) {
+        index.add(item.id + '@' + timestamp, item.timestamps[timestamp]);
+      }
     }
   }
 }

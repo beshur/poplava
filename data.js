@@ -1,4 +1,11 @@
 const DATA = {
+  '9FCV68RjsxE': {
+    id: '9FCV68RjsxE',
+    title: 'Фронтова поплава #128',
+    date: '2023-07-03',
+    num: 128,
+    timestamps: {},
+  },
   '2Sxp38E01qA': {
     id: '2Sxp38E01qA',
     title: 'Фронтова поплава #127',

@@ -1,5 +1,5 @@
+#!/usr/bin/env node
 const fs = require('fs');
-
 // Read the data from the JSON file
 fs.readFile('data.json', 'utf8', (err, jsonString) => {
   if (err) {
@@ -14,10 +14,11 @@ fs.readFile('data.json', 'utf8', (err, jsonString) => {
     let firstObject;
     for (let p in data) {
       firstObject = data[p];
-      break;
+      if (!firstObject.deleted) {
+        break;
+      }
     }
     console.log('Data read successfully');
-
 
     // Read the index.html file
     fs.readFile('./tools/template.html', 'utf8', (err, htmlString) => {
@@ -36,10 +37,11 @@ fs.readFile('data.json', 'utf8', (err, jsonString) => {
       const modifiedHtmlString = htmlString
         .replace(/%%id%%/g, firstObject.id)
         .replace('%%title%%', firstObject.title)
-        .replace('%%timestamps%%', timestampsHtml);
+        .replace('%%timestamps%%', timestampsHtml)
+        .replace('%%SHA%%', process.env.SHA);
 
       // Write the modified HTML back to index.html
-      fs.writeFile('index2.html', modifiedHtmlString, err => {
+      fs.writeFile('index.html', modifiedHtmlString, err => {
         if (err) console.log("Error writing file:", err);
       });
     });

@@ -34,7 +34,7 @@
   </header>
   <main>
     <section id="watch">
-      <article id="${id}" class="item">
+      <article id="%%id%%" class="item">
         <h3>%%title%%</h3>
         <div class="content">
           <div class="youtube-player" data-id="%%id%%">
@@ -73,22 +73,17 @@
     </footer>
   </main>
   <script src="https://cdn.jsdelivr.net/gh/nextapps-de/flexsearch@0.7.2/dist/flexsearch.light.js"></script>
-  <script src="https://www.youtube.com/iframe_api" async></script>
-  <script src="./data.js?ver=89"></script>
-  <script src="./videos.js?ver=4"></script>
+  <script src="./videos.js?ver=%%SHA%%"></script>
+  <script src="https://www.youtube.com/iframe_api" defer></script>
+  <script src="https://analytics.buznik.net/matomo/matomo.js" defer></script>
   <!-- Matomo -->
   <script>
     var _paq = window._paq = window._paq || [];
-    /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
     _paq.push(['trackPageView']);
     _paq.push(['enableLinkTracking']);
-    (function () {
-      var u = "https://analytics.buznik.net/matomo/";
-      _paq.push(['setTrackerUrl', u + 'matomo.php']);
-      _paq.push(['setSiteId', '1']);
-      var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
-      g.async = true; g.src = u + 'matomo.js'; s.parentNode.insertBefore(g, s);
-    })();
+    var u = "https://analytics.buznik.net/matomo/";
+    _paq.push(['setTrackerUrl', u + 'matomo.php']);
+    _paq.push(['setSiteId', '1']);
   </script>
   <!-- End Matomo Code -->
   <img src="https://buznik.net/images/poplavaClear.gif" />

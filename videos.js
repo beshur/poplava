@@ -7,6 +7,7 @@ let overlayVisible = false;
 let currentId = '';
 let debounceTimer;
 let DATA;
+let youtubeEmbedApiInit = false;
 
 const analyticsPush = function (category, action, name) {
   if (_paq) {
@@ -246,10 +247,15 @@ window.onload = async function () {
   });
 
   rusEl.addEventListener('click', onRusClick);
+
+  if (!currentId && youtubeEmbedApiInit) {
+    onYouTubeIframeAPIReady();
+  }
 };
 
 function onYouTubeIframeAPIReady() {
   console.log('YT API loaded');
+  youtubeEmbedApiInit = true;
   for (let id in DATA) {
     changeVideo({ id });
     break;

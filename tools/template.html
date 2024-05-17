@@ -34,17 +34,17 @@
   </header>
   <main>
     <section id="watch">
-      <article id="${id}" class="item item${deleted ? ' item-deleted' : ''}">
-        <h3>Фронтова поплава #148: Чмут про західну допомогу та ракетні удари по окупованому Криму</h3>
+      <article id="${id}" class="item">
+        <h3>%%title%%</h3>
         <div class="content">
-          <div class="youtube-player" data-id="pEnGFrOckb8" data-start="125">
-            <img src="https://i.ytimg.com/vi/pEnGFrOckb8/hqdefault.jpg" alt="Поплава" />
+          <div class="youtube-player" data-id="%%id%%">
+            <img src="https://i.ytimg.com/vi/%%id%%/hqdefault.jpg" alt="Поплава" />
             <div class="play"></div>
           </div>
           <span class="lds-dual-ring"></span>
         </div>
         <ul class="timestamps">
-          <li><span class="timestamp" data-timestamp="${timestamp}">${timestamp}</span>: ${timestamps[timestamp]}</li>
+          %%timestamps%%
         </ul>
       </article>
 

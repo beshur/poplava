@@ -33,12 +33,13 @@ fs.readFile('data.json', 'utf8', (err, jsonString) => {
         timestampsHtml += `<li><span class="timestamp" data-timestamp="${timestamp}">${timestamp}</span>: ${label}</li>`;
       }
 
+      const sha = process.env.SHA?.substring(0, 6) || 'dev';
       // Insert the first object into the HTML
       const modifiedHtmlString = htmlString
         .replace(/%%id%%/g, firstObject.id)
         .replace('%%title%%', firstObject.title)
         .replace('%%timestamps%%', timestampsHtml)
-        .replace('%%SHA%%', process.env.SHA);
+        .replace(/%%SHA%%/g, sha);
 
       // Write the modified HTML back to index.html
       fs.writeFile('index.html', modifiedHtmlString, err => {

@@ -36,7 +36,7 @@ jobs:
       - name: Build template
         run: node tools/build.js
         env:
-          SHA: github.sha
+          SHA: ${{ github.sha }}
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:

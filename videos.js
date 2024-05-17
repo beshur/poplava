@@ -198,7 +198,6 @@ function onRusClick() {
 
 window.onload = async function () {
   console.log('loaded');
-
   const watchEl = document.getElementById('watch');
   const videosEl = document.getElementById('videos');
   const searchEl = document.getElementById('search');
@@ -206,8 +205,7 @@ window.onload = async function () {
   const searchResultsEl = document.getElementById('searchResults');
   const rusEl = document.querySelector('.rus');
 
-  DATA = await fetch('./data.json').then((res) => res.json());
-  console.log('DATA', DATA)
+  DATA = await fetch('./data.json?v=' + APP_VERSION).then((res) => res.json());
   const videosHtml = [];
   for (let id in DATA) {
     videosHtml.push(TITLE_TPL(DATA[id]));

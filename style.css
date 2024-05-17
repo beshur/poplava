@@ -259,6 +259,46 @@ footer nav ul li {
   list-style-type: none;
 }
 
+.youtube-player {
+  position: relative;
+  overflow: hidden;
+}
+
+.youtube-player img {
+  object-fit: cover;
+  display: block;
+  left: 0;
+  bottom: 0;
+  margin: auto;
+  max-width: 100%;
+  width: 100%;
+  position: absolute;
+  right: 0;
+  top: 0;
+  border: none;
+  height: auto;
+  cursor: pointer;
+  -webkit-transition: 0.4s all;
+  -moz-transition: 0.4s all;
+  transition: 0.4s all;
+}
+
+.youtube-player img:hover {
+  -webkit-filter: brightness(75%);
+}
+
+.youtube-player .play {
+  height: 48px;
+  width: 68px;
+  left: 50%;
+  top: 50%;
+  margin-left: -34px;
+  margin-top: -24px;
+  position: absolute;
+  background: url('https://i.ibb.co/j3jcJKv/yt.png') no-repeat;
+  cursor: pointer;
+}
+
 .lds-dual-ring {
   display: inline-block;
   width: 80px;

@@ -1,12 +1,12 @@
 const player = { current: null };
 const index = new FlexSearch.Index({ tokenize: 'full', language: 'uk' });
-
 const VIDEO_HEIGHT = 400;
 const VIDEO_WIDTH = '100%';
 
 let overlayVisible = false;
 let currentId = '';
 let debounceTimer;
+let DATA;
 
 const analyticsPush = function (category, action, name) {
   if (_paq) {
@@ -63,9 +63,8 @@ const ITEM_TPL = function ({ id, title, timestamps, deleted }) {
 };
 
 const TITLE_TPL = function ({ id, title, deleted }) {
-  return `<article data-id="${id}" data-timestamp="" class="itemTitle${deleted ? ' itemTitle-deleted' : ''}">${title}${
-    deleted ? ' (видалено)' : ''
-  }</article>`;
+  return `<article data-id="${id}" data-timestamp="" class="itemTitle${deleted ? ' itemTitle-deleted' : ''}">${title}${deleted ? ' (видалено)' : ''
+    }</article>`;
 };
 
 const timeStampHandler = function (e) {
@@ -196,10 +195,9 @@ function onRusClick() {
   analyticsPush('Easter', 'Clicked', 'click' + num);
 }
 
-window.onload = function () {
+window.onload = async function () {
   console.log('loaded');
 
-  let index = 0;
   const watchEl = document.getElementById('watch');
   const videosEl = document.getElementById('videos');
   const searchEl = document.getElementById('search');
@@ -207,6 +205,8 @@ window.onload = function () {
   const searchResultsEl = document.getElementById('searchResults');
   const rusEl = document.querySelector('.rus');
 
+  DATA = await fetch('./data.json').then((res) => res.json());
+  console.log('DATA', DATA)
   const videosHtml = [];
   for (let id in DATA) {
     videosHtml.push(TITLE_TPL(DATA[id]));
@@ -246,12 +246,6 @@ window.onload = function () {
   });
 
   rusEl.addEventListener('click', onRusClick);
-
-  // This code loads the IFrame Player API code asynchronously.
-  const tag = document.createElement('script');
-  tag.src = 'https://www.youtube.com/iframe_api';
-  const firstScriptTag = document.getElementsByTagName('script')[0];
-  firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 };
 
 function onYouTubeIframeAPIReady() {

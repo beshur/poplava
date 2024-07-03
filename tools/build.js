@@ -37,7 +37,7 @@ fs.readFile('data.json', 'utf8', (err, jsonString) => {
       // Insert the first object into the HTML
       const modifiedHtmlString = htmlString
         .replace(/%%id%%/g, firstObject.id)
-        .replace('%%title%%', firstObject.title)
+        .replace(/%%title%%/g, firstObject.title)
         .replace('%%timestamps%%', timestampsHtml)
         .replace(/%%SHA%%/g, sha);
 

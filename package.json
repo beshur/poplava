@@ -4,7 +4,7 @@
   "description": "Список відео із питаннями із таймстемпів.",
   "main": "videos.js",
   "scripts": {
-    "build": "./tools/build.sh"
+    "build": "tools/build.sh"
   },
   "keywords": [],
   "author": "",

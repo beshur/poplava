@@ -41,13 +41,14 @@ jobs:
           SHA: ${{ github.sha }}
 
       - name: Copy HTML
-        run: cp ./dist/* .
+        run: cp ./*.js* ./dist && cp ./*.css* ./dist && cp ./*.m4a ./dist && cp -r ./images ./dist/
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           # Upload entire repository
-          path: './'
+          path: './dist'
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4

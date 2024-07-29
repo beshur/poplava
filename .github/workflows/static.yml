@@ -34,7 +34,7 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Build template
-        run: npm ci && npm run build
+        run: mkdir dist && npm ci && npm run build
         env:
           SHA: ${{ github.sha }}
       - name: Upload artifact

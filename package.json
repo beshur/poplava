@@ -1,0 +1,15 @@
+{
+  "name": "poplava",
+  "version": "1.0.0",
+  "description": "Список відео із питаннями із таймстемпів.",
+  "main": "videos.js",
+  "scripts": {
+    "build": "node tools/build.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "sitemap": "^8.0.0"
+  }
+}

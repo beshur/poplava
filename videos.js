@@ -8,6 +8,7 @@ let currentId = '';
 let debounceTimer;
 let DATA;
 let youtubeEmbedApiInit = false;
+let initialId = document.querySelector('#watch .item').dataset.id;
 
 const analyticsPush = function (category, action, name) {
   if (_paq) {
@@ -137,7 +138,7 @@ function changeVideo({ id, timestamp }) {
     analyticsPush('Videos', 'Selected Timestamp', [id, timestamp].join('@'));
   }
   toggleSearchOverlay(false);
-  document.querySelectorAll(`#videos article`).forEach((item) => item.classList.remove('active'));
+  document.querySelectorAll(`#videos .itemTitle`).forEach((item) => item.classList.remove('active'));
   document.querySelector(`#videos [data-id="${id}"]`)?.classList.toggle('active');
 }
 
@@ -246,8 +247,5 @@ window.onload = async function () {
 function onYouTubeIframeAPIReady() {
   console.log('YT API loaded');
   youtubeEmbedApiInit = true;
-  for (let id in DATA) {
-    changeVideo({ id });
-    break;
-  }
+  changeVideo({ id: initialId });
 }

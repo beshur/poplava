@@ -36,12 +36,9 @@ jobs:
         uses: actions/configure-pages@v5
 
       - name: Build template
-        run: mkdir dist && npm ci && npm run build
+        run: npm ci && npm run build
         env:
           SHA: ${{ github.sha }}
-
-      - name: Copy HTML
-        run: cp ./*.js* ./dist && cp ./*.css* ./dist && cp ./*.m4a ./dist && cp -r ./images ./dist/
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

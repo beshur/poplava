@@ -63,11 +63,6 @@ const ITEM_TPL = function ({ id, title, timestamps, deleted }) {
   </article>`;
 };
 
-const TITLE_TPL = function ({ id, title, deleted }) {
-  return `<article data-id="${id}" data-timestamp="" class="itemTitle${deleted ? ' itemTitle-deleted' : ''}">${title}${deleted ? ' (видалено)' : ''
-    }</article>`;
-};
-
 const timeStampHandler = function (e) {
   const target = e.target;
   if (!target) {
@@ -199,20 +194,13 @@ function onRusClick() {
 window.onload = async function () {
   console.log('loaded');
   const watchEl = document.getElementById('watch');
-  const videosEl = document.getElementById('videos');
+  const videosEls = document.querySelectorAll('#videos .itemTitle');
   const searchEl = document.getElementById('search');
   const overlayEl = document.getElementById('overlay');
   const searchResultsEl = document.getElementById('searchResults');
   const rusEl = document.querySelector('.rus');
 
   DATA = await fetch('./data.json?v=' + APP_VERSION).then((res) => res.json());
-  const videosHtml = [];
-  for (let id in DATA) {
-    videosHtml.push(TITLE_TPL(DATA[id]));
-  }
-
-  videosEl.innerHTML = videosHtml.join('');
-
   initSearch();
 
   searchEl.addEventListener('keyup', onSearch);
@@ -234,11 +222,15 @@ window.onload = async function () {
     analyticsPush('Search', 'Selected Result', [id, timestamp].join('@'));
     searchSelectHandler(pointer.target.dataset);
   });
-  videosEl.addEventListener('click', function (e) {
-    const { id } = e.target.dataset;
-    analyticsPush('Videos', 'Selected Video', id);
-    searchSelectHandler(e.target.dataset);
-  });
+  videosEls.forEach(item => {
+    item.addEventListener('click', function (e) {
+      e.preventDefault();
+      const { id } = e.target.dataset;
+      analyticsPush('Videos', 'Selected Video', id);
+      searchSelectHandler(e.target.dataset);
+      return false;
+    });
+  })
 
   overlayEl.addEventListener('click', function (e) {
     toggleSearchOverlay(false);

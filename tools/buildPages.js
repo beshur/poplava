@@ -24,6 +24,7 @@ function writePage(videoObject, isFirst, pageLinks) {
       .replace(/%%id%%/g, videoObject.id)
       .replace(/%%title%%/g, videoObject.title)
       .replace(/%%videos%%/g, pageLinks.join(''))
+      .replace(/%%pageTitle%%/g, isFirst ? '' : ` - ${videoObject.title}`)
       .replace('%%timestamps%%', timestampsHtml)
       .replace(/%%SHA%%/g, sha);
 

@@ -42,10 +42,12 @@ const extractTimestampsWithTitles = (description) => {
 async function fetchMetadataForId(VIDEO_ID) {
   const metadata = await fetchYoutubeMetadata(VIDEO_ID)
   if (metadata) {
-    const date = new Date(metadata.snippet.publishedAt);
+    const dateRecorded = metadata.snippet.description.match(/Випуск за (\d+\.\d+\.\d+)/)[1];
+    const date = new Date(dateRecorded ? dateRecorded : metadata.snippet.publishedAt);
     const dateFormatted = `${date.getFullYear()}-${date.getMonth() + 1 < 10 ? '0' : ''}${date.getMonth() + 1}-${date.getDate()}`;
     const title = metadata.snippet.localized.title;
     const num = metadata.snippet.localized.title.match(/(\d+)/)[1];
+
     const timestamps = extractTimestampsWithTitles(metadata.snippet.description);
     const result = {
       id: VIDEO_ID,

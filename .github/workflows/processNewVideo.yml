@@ -34,9 +34,8 @@ jobs:
 
       - name: Commit changes
         run: |
-          git add data.json
-          git commit -m 'Update data.json with new entry'
-          git push --set-upstream origin update-data-json
+          git commit -am 'Update data.json with new entry'
+          git push add-${{ github.event.inputs.videoId }}
 
       - name: Create Pull Request
         id: create_pr

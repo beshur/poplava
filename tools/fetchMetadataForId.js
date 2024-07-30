@@ -47,19 +47,16 @@ async function fetchMetadataForId(VIDEO_ID) {
     const title = metadata.snippet.localized.title;
     const num = metadata.snippet.localized.title.match(/(\d+)/)[1];
     const timestamps = extractTimestampsWithTitles(metadata.snippet.description);
-    console.log('Extracted Timestamps:', timestamps);
-    console.log('Video Metadata:', {
-      dateFormatted,
-      title,
-      num
-    });
-    return {
+    const result = {
       id: VIDEO_ID,
       date: dateFormatted,
       title,
       num,
       timestamps
-    }
+    };
+    console.log('Extracted Timestamps:', timestamps);
+    console.log('Video Metadata:', result);
+    return result
   }
   return null;
 }

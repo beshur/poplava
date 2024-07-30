@@ -39,10 +39,4 @@ jobs:
 
       - name: Create Pull Request
         id: create_pr
-        uses: peter-evans/create-pull-request@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          branch: add-${{ github.event.inputs.videoId }}
-          title: 'Update data.json with meta from ${{ github.event.inputs.videoId }}'
-          body: "This PR updates data.json with a new entry for ${{ github.event.inputs.videoId }}"
-          labels: "automated-pr"
+        run: gh pr create -H add-${{ github.event.inputs.videoId }} -l "automated-pr" -t "Add meta from videoId ${{ github.event.inputs.videoId }}" -b "This PR updates data.json with a new entry for ${{ github.event.inputs.videoId }}"

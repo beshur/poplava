@@ -25,7 +25,7 @@ const fetchYoutubeMetadata = async (videoId) => {
 
 const extractTimestampsWithTitles = (description) => {
   const lines = description.split('\n');
-  const timestampRegex = /\b\d{1,2}:\d{2}\b/;
+  const timestampRegex = /\b\d{1,2}?:?\d{1,2}:\d{2}\b/;
   const timestampsWithTitles = {};
 
   lines.forEach(line => {

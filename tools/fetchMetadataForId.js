@@ -14,11 +14,12 @@ const fetchYoutubeMetadata = async (videoId) => {
     }
     const data = await response.json();
     if (data.items.length === 0) {
-      throw new Error('Video not found');
+      console.log('Video %s not found', videoId);
+      return null;
     }
     return data.items[0];
   } catch (error) {
-    console.error('Error fetching video metadata:', error);
+    console.error('Error fetching video metadata:', videoId, error);
     return null;
   }
 };
@@ -32,7 +33,7 @@ const extractTimestampsWithTitles = (description) => {
     const match = line.match(timestampRegex);
     if (match) {
       const timestamp = match[0];
-      const title = line.replace(new RegExp(timestamp + ' —|- '), '').trim();
+      const title = line.replace(new RegExp(`${timestamp} [-—]`), '').trim();
       timestampsWithTitles[timestamp] = title;
     }
   });
@@ -42,11 +43,11 @@ const extractTimestampsWithTitles = (description) => {
 async function fetchMetadataForId(VIDEO_ID) {
   const metadata = await fetchYoutubeMetadata(VIDEO_ID)
   if (metadata) {
-    const dateRecorded = metadata.snippet.description.match(/Випуск за (\d+\.\d+\.\d+)/)[1];
-    const date = new Date(dateRecorded ? dateRecorded : metadata.snippet.publishedAt);
-    const dateFormatted = `${date.getFullYear()}-${date.getMonth() + 1 < 10 ? '0' : ''}${date.getMonth() + 1}-${date.getDate()}`;
+    const dateRecordedMatch = metadata.snippet.description.match(/Випуск за (\d+\.\d+\.\d+)/)
+    const date = new Date(dateRecordedMatch ? dateRecordedMatch[1] : metadata.snippet.publishedAt);
+    const dateFormatted = `${date.getFullYear()}-${date.getMonth() + 1 < 10 ? '0' : ''}${date.getMonth() + 1}-${date.getDate() < 10 ? '0' : ''}${date.getDate()}`;
     const title = metadata.snippet.localized.title;
-    const num = metadata.snippet.localized.title.match(/(\d+)/)[1];
+    const num = parseInt(metadata.snippet.localized.title.match(/(\d+)/)[1]);
 
     const timestamps = extractTimestampsWithTitles(metadata.snippet.description);
     const result = {
@@ -56,7 +57,6 @@ async function fetchMetadataForId(VIDEO_ID) {
       num,
       timestamps
     };
-    console.log('Extracted Timestamps:', timestamps);
     console.log('Video Metadata:', result);
     return result
   }

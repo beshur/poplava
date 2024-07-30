@@ -10,15 +10,16 @@ on:
 
 jobs:
   build:
-    runs-on: node:lts-bullseye-slim
+    runs-on: ubuntu-latest
 
     steps:
-      - name: Print input values
-        run: |
-          echo "ID: ${{ github.event.inputs.videoId }}"
-
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20'
 
       - name: Fetch and store video metadata in data.json
         run: node ./tools/storeVideoMetadata.js ${{ github.event.inputs.videoId }}

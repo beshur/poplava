@@ -9,7 +9,9 @@ async function storeVideoMetadata() {
   const filePath = path.join(__dirname, '../data.json');
   if (fs.existsSync(filePath)) {
     const newEntry = await fetchMetadataForId(videoId);
-
+    if (!newEntry) {
+      return;
+    }
     const fileContent = fs.readFileSync(filePath, 'utf-8');
     const fileJson = JSON.parse(fileContent);
     let result = '';

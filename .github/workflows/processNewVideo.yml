@@ -24,6 +24,8 @@ jobs:
         run: |
           echo "ID: ${{ github.event.inputs.videoId }}"
           node ./tools/storeVideoMetadata.js ${{ github.event.inputs.videoId }}
+        with:
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
 
       - name: Create new branch
         run: |

@@ -1,6 +1,6 @@
 // const fetch = require('node-fetch');
 
-const API_KEY = 'AIzaSyC2bmo58bCm4NEwCuB7L1Z_nDikQd-Fi0w';
+const API_KEY = process.env.YOUTUBE_API_KEY;
 // const VIDEO_ID = 'ExHqD3o26u4';
 // const VIDEO_ID = process.argv[2];
 

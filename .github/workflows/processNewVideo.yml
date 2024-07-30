@@ -40,3 +40,5 @@ jobs:
       - name: Create Pull Request
         id: create_pr
         run: gh pr create -H add-${{ github.event.inputs.videoId }} -l "automated-pr" -t "Add meta from videoId ${{ github.event.inputs.videoId }}" -b "This PR updates data.json with a new entry for ${{ github.event.inputs.videoId }}"
+        env:
+          GH_TOKEN: ${{ github.token }}

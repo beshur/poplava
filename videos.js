@@ -55,7 +55,7 @@ const TIMESTAMPS_LIST = function (timestamps) {
 
 const ITEM_TPL = function ({ id, title, timestamps, deleted }) {
   return `<article id="${id}" class="item${deleted ? ' item-deleted' : ''}">
-    <h3>${title}</h3>
+    <h2>${title}</h2>
     <div class="content">
       <div id="playerId${id}"></div>
       <span class="lds-dual-ring"></span>

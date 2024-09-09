@@ -79,12 +79,12 @@ main {
   margin-bottom: 50px;
 }
 
-.item h3 {
+.item h2 {
   font-weight: normal;
   font-size: 24px;
 }
 
-.item-deleted h3 {
+.item-deleted h2 {
   text-decoration: line-through;
 }
 

@@ -47,7 +47,8 @@ async function fetchMetadataForId(VIDEO_ID) {
     const date = new Date(dateRecordedMatch ? dateRecordedMatch[1] : metadata.snippet.publishedAt);
     const dateFormatted = `${date.getFullYear()}-${date.getMonth() + 1 < 10 ? '0' : ''}${date.getMonth() + 1}-${date.getDate() < 10 ? '0' : ''}${date.getDate()}`;
     const title = metadata.snippet.localized.title;
-    const num = parseInt(metadata.snippet.localized.title.match(/(\d+)/)[1]);
+    const numberMatched = title.match(/(\d+)/)
+    const num = numberMatched ? parseInt(numberMatched[1]): '';
 
     const timestamps = extractTimestampsWithTitles(metadata.snippet.description);
     const result = {
